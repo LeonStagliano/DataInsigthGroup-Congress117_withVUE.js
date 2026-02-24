@@ -71,7 +71,24 @@ createApp({
                 this.leastLoyals = this.leastTenPercent(this.chamberMembers, `votes_with_party_pct`)
                 this.mostLoyals = this.mostTenPercent(this.chamberMembers, `votes_with_party_pct`)
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err)
+                console.log("Fetch request failed: Loading Chamber's JSONs")
+
+                chamberName === 'house' ? this.chamberMembers = [...house.results[0].members] : this.chamberMembers = [...senate.results[0].members]
+                this.isLoading = false
+
+                this.catchStates()
+                this.states.sort()
+                this.dataOfParties()
+                this.totalAverageOfPartyVotes = this.calcTotalAverageOfPartyVotes()
+                this.chamberMembers = this.totalVotesWithParty(this.chamberMembers)
+                this.leastEngaged = this.mostTenPercent(this.chamberMembers, `missed_votes_pct`)
+                this.mostEngaged = this.leastTenPercent(this.chamberMembers, `missed_votes_pct`)
+                this.leastLoyals = this.leastTenPercent(this.chamberMembers, `votes_with_party_pct`)
+                this.mostLoyals = this.mostTenPercent(this.chamberMembers, `votes_with_party_pct`)
+            }
+        )
 
     },
     methods: {
